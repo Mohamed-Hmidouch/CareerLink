@@ -30,8 +30,8 @@ services:
     container_name: Careerlink_php
     restart: always
     volumes:
-      - ./Careerlink/src/Views:/var/www/html
-      - ./:/app 
+      - .:/var/www/html
+      - ./:/app
     ports:
       - "80:80"
     depends_on:
