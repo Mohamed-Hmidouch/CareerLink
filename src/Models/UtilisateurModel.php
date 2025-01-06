@@ -15,7 +15,7 @@ class UtilisateurModel{
     }
 
     public function findUserByEmailAndPassword($email, $password){
-        $query = "SELECT Utilisateur.id , Utilisateur.email , Utilisateur.motDePasse, Role.id as role_id , Role.nom as `role`
+        $query = "SELECT Utilisateur.id , Utilisateur.email , Utilisateur.motDePasse, Role.id as role_id , Role.role as `role`
         FROM Utilisateur join Role
          on Role.id = Utilisateur.roleId
           where Utilisateur.email = :email and Utilisateur.motDePasse = :password";
@@ -33,5 +33,14 @@ class UtilisateurModel{
             $role = new Role($row["role_id"], $row["role"]);
             return new Utilisateur($row['id'],$row["email"],$role,$row["motDePasse"]);
          }
+    }
+
+    public function registerUser($name,$email,$password){
+        $quer = "INSERT INTO `Utilisateur` (`nom`, `email`, `motDePasse`) Values(:name,:email,:password)";
+        $stmt = $this->conn->prepare($quer);
+        $stmt->bindParam(":name", $name);
+        $stmt->bindParam(":email", $email);
+        $stmt->bindParam(":password", $password);
+        $stmt->execute();
     }
 }

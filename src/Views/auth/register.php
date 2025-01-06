@@ -1,3 +1,31 @@
+<?php
+namespace App\auth\register;
+require_once "../../../vendor/autoload.php";
+
+use App\Controllers\Auth\RegisterController;
+use App\Controllers\Auth\RegisterControllerController;
+
+
+
+if(isset($_POST["submit"]))
+{
+
+    if(empty($_POST["email"]) && empty($_POST["password"]))
+    {
+        echo "email or password is empty";
+    }
+    else{
+        $name = $_POST["name"];
+        $email = $_POST["email"];
+        $password = $_POST["password"];
+        $role = $_POST["role"];
+        $roleId = ($role == "candidate") ? 2 : 3;
+        $authController = new RegisterController();
+        $authController->register($name,$role_id,$email,$password);
+
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,6 +47,22 @@
                 }
             }
         }
+
+        function checkRole(roleType) {
+    const selectedRole = document.querySelector('input[name="role"]:checked').value;
+    let roleId;
+    
+    if(selectedRole === 'candidate') {
+        roleId = 2;  // Pour Candidat
+    } else if(selectedRole === 'employer') {
+        roleId = 3;  // Pour Employeur
+    }
+    
+    console.log('Selected Role:', selectedRole);
+    console.log('Role ID:', roleId);
+    return roleId;
+}
+
     </script>
 </head>
 <body class="bg-light">
@@ -33,26 +77,9 @@
                 </div>
 
                 <!-- Form Content -->
-                <form class="p-8 space-y-6">
+                <form class="p-8 space-y-6" method="Post" action="">
                     <!-- Personal Info Section -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- First Name -->
-                        <div>
-                            <label class="block text-sm font-medium text-primary mb-2">
-                                Prénom
-                            </label>
-                            <div class="relative">
-                                <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                                    <i class="fas fa-user text-secondary"></i>
-                                </span>
-                                <input 
-                                    type="text" 
-                                    class="w-full pl-10 pr-4 py-3 bg-light border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent"
-                                    placeholder="John"
-                                >
-                            </div>
-                        </div>
-
                         <!-- Last Name -->
                         <div>
                             <label class="block text-sm font-medium text-primary mb-2">
@@ -63,7 +90,7 @@
                                     <i class="fas fa-user text-secondary"></i>
                                 </span>
                                 <input 
-                                    type="text" 
+                                    type="text" name="name"
                                     class="w-full pl-10 pr-4 py-3 bg-light border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent"
                                     placeholder="Doe"
                                 >
@@ -81,7 +108,7 @@
                                 <i class="fas fa-envelope text-secondary"></i>
                             </span>
                             <input 
-                                type="email" 
+                                type="email" name="email"
                                 class="w-full pl-10 pr-4 py-3 bg-light border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent"
                                 placeholder="john.doe@example.com"
                             >
@@ -90,43 +117,62 @@
 
                     <!-- Profile Type -->
                     <div>
-                        <label class="block text-sm font-medium text-primary mb-4">
-                            Type de profil
-                        </label>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- Candidate Option -->
-                            <label class="relative flex cursor-pointer">
-                                <input type="radio" name="profile-type" class="sr-only" checked>
-                                <div class="flex items-center w-full p-4 bg-light border border-gray-300 rounded-lg hover:border-accent group transition-colors">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-accent/10 mr-4">
-                                            <i class="fas fa-user-tie text-accent"></i>
-                                        </div>
-                                        <div>
-                                            <p class="font-medium text-primary">Candidat</p>
-                                            <p class="text-sm text-secondary">Chercher un emploi</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </label>
-
-                            <!-- Employer Option -->
-                            <label class="relative flex cursor-pointer">
-                                <input type="radio" name="profile-type" class="sr-only">
-                                <div class="flex items-center w-full p-4 bg-light border border-gray-300 rounded-lg hover:border-accent group transition-colors">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-accent/10 mr-4">
-                                            <i class="fas fa-building text-accent"></i>
-                                        </div>
-                                        <div>
-                                            <p class="font-medium text-primary">Employeur</p>
-                                            <p class="text-sm text-secondary">Poster des offres</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
+    <label class="block text-sm font-medium text-primary mb-4">
+        Type de profil
+    </label>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Candidate Option -->
+        <label class="relative flex cursor-pointer">
+        <input
+                type="radio"
+                name="role"
+                value="candidate"
+                class="sr-only"
+                id="candidate-option"
+                onchange="checkRole('candidate')"
+            >
+            <div
+                class="flex items-center w-full p-4 bg-light border border-gray-300 rounded-lg hover:border-accent group transition-colors"
+            >
+                <div class="flex items-center">
+                    <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-accent/10 mr-4">
+                        <i class="fas fa-user-tie text-accent"></i>
                     </div>
+                    <div>
+                        <p class="font-medium text-primary">Candidat</p>
+                        <p class="text-sm text-secondary">Chercher un emploi</p>
+                    </div>
+                </div>
+            </div>
+        </label>
+
+        <!-- Employer Option -->
+        <label class="relative flex cursor-pointer">
+        <input
+                type="radio"
+                name="role"
+                value="employer"
+                class="sr-only"
+                id="employer-option"
+                onchange="checkRole('employer')"
+            >
+            <div
+                class="flex items-center w-full p-4 bg-light border border-gray-300 rounded-lg hover:border-accent group transition-colors"
+            >
+                <div class="flex items-center">
+                    <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-accent/10 mr-4">
+                        <i class="fas fa-building text-accent"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium text-primary">Employeur</p>
+                        <p class="text-sm text-secondary">Poster des offres</p>
+                    </div>
+                </div>
+            </div>
+        </label>
+    </div>
+</div>
+
 
                     <!-- Password Fields -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -140,24 +186,7 @@
                                     <i class="fas fa-lock text-secondary"></i>
                                 </span>
                                 <input 
-                                    type="password" 
-                                    class="w-full pl-10 pr-4 py-3 bg-light border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent"
-                                    placeholder="••••••••"
-                                >
-                            </div>
-                        </div>
-
-                        <!-- Confirm Password -->
-                        <div>
-                            <label class="block text-sm font-medium text-primary mb-2">
-                                Confirmer le mot de passe
-                            </label>
-                            <div class="relative">
-                                <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                                    <i class="fas fa-lock text-secondary"></i>
-                                </span>
-                                <input 
-                                    type="password" 
+                                    type="password"  name ="motDePasse"
                                     class="w-full pl-10 pr-4 py-3 bg-light border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent"
                                     placeholder="••••••••"
                                 >

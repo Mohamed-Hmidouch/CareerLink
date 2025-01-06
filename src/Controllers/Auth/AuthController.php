@@ -6,7 +6,6 @@ use com_exception;
 use PDO;
 
 class AuthController{
-
    
     
     public function login($email, $password){
@@ -32,5 +31,6 @@ class AuthController{
             }
         }
     }
+
 
 }

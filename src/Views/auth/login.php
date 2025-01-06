@@ -3,7 +3,7 @@ namespace App\auth\login;
 require_once "../../../vendor/autoload.php";
 use App\Controllers\Auth\AuthController;
 
-
+session_start();
 
 if(isset($_POST["submit"]))
 {
